@@ -216,3 +216,12 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Model training artifacts and generated files
+weights/
+runs/
+tokenizer_*.json
+*.pt
+*.pth
+*.ckpt
+
