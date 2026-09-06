@@ -38,17 +38,16 @@ class PostionalEncoding(nn.Module):
         return self.dropout(x)
 
 class LayerNormalization(nn.Module):
-    def __init__(self,eps:float=1e-6):
+    def __init__(self, d_model:int,eps:float=1e-6):
         super().__init__()
         self.eps = eps
-        self.alpha = nn.Parameter(torch.ones(1))# Multiplied
-        self.beta  = nn.Parameter(torch.zeros(1))# Added
+        self.alpha = nn.Parameter(torch.ones(d_model))# Multiplied
+        self.beta  = nn.Parameter(torch.zeros(d_model))# Added
 
-    def forward(self,x):
-        mean = x.mean(dim =-1, keepdim = True)
-        std = x.std(dim=-1, keepdim =True)
-        return self.alpha*(x-mean)/(std+self.eps)+self.beta
-
+    def forward(self, x):
+        mean = x.mean(dim=-1, keepdim=True)
+        var = x.var(dim=-1, keepdim=True, unbiased=False)
+        return self.alpha * (x - mean) / torch.sqrt(var + self.eps) + self.beta
 class FeedForwardBlock(nn.Module):
     def __init__(self,d_model:int, d_ff:int,dropout:float)->None:
         super().__init__()
@@ -80,7 +79,7 @@ class MultiHeadAttentionBlock(nn.Module):
         attention_scores = (query@key.transpose(-2,-1))/math.sqrt(d_k)
 
         if mask is not None:
-            attention_scores = attention_scores.masked_fill(mask==0,1e-9)
+            attention_scores = attention_scores.masked_fill(mask==0,-1e9)
         
         attention_scores = attention_scores.softmax(dim=-1)
 
@@ -109,10 +108,10 @@ class MultiHeadAttentionBlock(nn.Module):
         return self.w_o(x)
 
 class ResidualConnection(nn.Module):
-    def __init__(self,dropout:float)->None:
+    def __init__(self,d_model:int,dropout:float)->None:
         super().__init__()
         self.dropout = nn.Dropout(dropout)
-        self.norm = LayerNormalization()
+        self.norm = LayerNormalization(d_model)
 
     def forward(self,x,sublayer):
         return x + self.dropout(sublayer(self.norm(x)))

@@ -6,7 +6,7 @@ import math
 from datasets import load_dataset
 from tokenizers import Tokenizer
 from tokenizers.models import WordLevel
-from config import get_config, get_weights_file_path
+from small_training.small_config import get_config, get_weights_file_path
 # pyrefly: ignore [missing-import]
 from tokenizers.pre_tokenizers import Whitespace
 # pyrefly: ignore [missing-import]
@@ -153,8 +153,19 @@ def get_ds(config):
 
     return train_dataloader, val_dataloader, src_tokenizer, tgt_tokenizer
 
-def get_model(config,vocab_src_len,vocab_tgt_len):
-    model = build_transformer(vocab_src_len,vocab_tgt_len,config['seq_len'],config['seq_len'],config['d_model'])
+def get_model(config, vocab_src_len, vocab_tgt_len):
+
+    model = build_transformer(
+        vocab_src_len,
+        vocab_tgt_len,
+        config['seq_len'],
+        config['seq_len'],
+        d_model=config['d_model'],
+        h=config['h'],
+        N=config['N'],
+        d_ff=config['d_ff']
+    )
+
     return model
 
 

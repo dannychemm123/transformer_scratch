@@ -1,0 +1,17 @@
+data = [
+    ("I am happy", "Sono felice"),
+    ("I am sad", "Sono triste"),
+    ("I am tired", "Sono stanco"),
+    ("I like cats", "Mi piacciono i gatti"),
+    ("I like dogs", "Mi piacciono i cani"),
+    ("I love you", "Ti amo"),
+    ("You are happy", "Sei felice"),
+    ("You are tired", "Sei stanco"),
+    ("He is happy", "Lui è felice"),
+    ("She is happy", "Lei è felice"),
+    ("We are happy", "Siamo felici"),
+    ("We are tired", "Siamo stanchi"),
+    ("They are happy", "Sono felici"),
+    ("The cat is small", "Il gatto è piccolo"),
+    ("The dog is big", "Il cane è grande"),
+]
